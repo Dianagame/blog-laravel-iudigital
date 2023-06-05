@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRequest;
+use App\Http\Requests\Post\StoreRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\Post\PutRequest;
+
 
 class PostController extends Controller
 {
@@ -20,7 +22,7 @@ class PostController extends Controller
             abort(403);
         }*/
 
-        return view('dashboard.post.index', compact('posts'));
+        return view('Dashboard.post.index', compact('posts'));
    
     }
 
@@ -34,6 +36,7 @@ class PostController extends Controller
         /* if (!Gate::allows('create',$posts)) {
             abort(403);
         }*/
+       
         return view('dashboard.post.create', compact('categories','post'));
 
     }
@@ -44,31 +47,39 @@ class PostController extends Controller
     public function store(StoreRequest $request)
     {
         $post = new Post($request->validated());
-        return to_route('post.index')->with('status', "Nuevo post creado");
+        $post->save();
+        return to_route('posts.index')->with('status', "Nuevo post creado");
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(Post $post)
     {
-        //
+        return view('dashboard.post.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+   
     public function edit(Post $post)
     {
-        //
+        $categories = Category::pluck('id', 'title');
+        /* if (!Gate::allows('update', $post)) {
+            abort(403);
+        } */
+        $task = 'edit';
+        return view('dashboard.post.edit', compact('categories', 'post', 'task'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(PutRequest $request, Post $post)
     {
-        //
+        $data = $request->validated();
+        if(isset($data['image'])){
+            $data['image'] = $filename = time().".".$data['image']->extension();
+            $request->image->move(public_path('images/otro'), $filename);
+        }
+        $post->update($data);
+        return redirect()->route('posts.index')->with('status', 'Publicación actualizado');
     }
 
     /**
@@ -76,6 +87,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        /* if (!Gate::allows('delete', $post)) {
+            abort(403);
+        } */
+        $post->delete();
+        return redirect()->route('posts.index')->with('status', 'Publicación eliminada');
     }
 }

@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Exists;
-use Illuminate\Validation\Rules\Unique;
 
 class StoreRequest extends FormRequest
 {
@@ -24,13 +22,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required| min:5| max:500',
-            'slug' => 'required| min:5| max:500|unique:posts',
-            'content' => 'required| min:7',
-            'category_id' => 'required| integer|Exists:category_id',
-            'description' => 'required| min:7',
-            'posted'=>'required'
-
+            'title' => 'required|min:5|max:500',
+            'slug' => 'required|min:5|max:500|unique:categories',
         ];
     }
 }
