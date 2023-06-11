@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Dashboard.layout')
 
 @section('content')
     <a class="btn btn-success my-3" href="{{ route('categories.create') }}">Crear categoría</a>
@@ -18,7 +18,7 @@
                     <td width="10px">
                         <a class="btn btn-primary btn-action edit" href="{{ route('categories.edit', $c) }}">Editar</a>
                         <a class="btn btn-primary btn-action" href="{{ route('categories.show', $c) }}">Ver</a>
-                        <form action="{{ route('categories.destroy', $c) }}" method="POST" class="form-delete">
+                        <form action="{{ route('categories.destroy', $c) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-action delete" type="submit">Eliminar</button>

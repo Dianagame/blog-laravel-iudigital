@@ -38,11 +38,9 @@
 </div>
 
 
-@if ($task == 'edit')
-<div class="form-group">
-    <label for="image">Foto Post</label>
-    <input type="file" name="image" id="image">
-</div>
-@endif
+    <div class="form-group">
+        <label for="image">Foto</label>
+        <input type="file" name="image" id="image">
+    </div>
 
 <input class="btn btn-primary mt-3" type="submit" value="Guardar">
